@@ -1,0 +1,81 @@
+import pygame
+import sys
+
+# Initialize Pygame
+pygame.init()
+
+# Screen settings
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+pygame.display.set_caption("Donkeys of Durango")
+
+# Colors
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+GREEN = (34, 177, 76)
+
+# Load images
+maria_img = pygame.image.load("maria.png")  # Maria's sprite
+maria_img = pygame.transform.scale(maria_img, (50, 50))
+
+miguel_img = pygame.image.load("miguel.png")  # Miguel's sprite
+miguel_img = pygame.transform.scale(miguel_img, (50, 50))
+
+# Positioning
+maria_x, maria_y = 100, 100
+miguel_x, miguel_y = 600, 300
+
+# Movement speed
+speed = 5
+
+# Game loop
+running = True
+interaction_happened = False
+font = pygame.font.Font(None, 36)
+
+def display_message(text):
+    message = font.render(text, True, BLACK)
+    screen.blit(message, (SCREEN_WIDTH//4, SCREEN_HEIGHT//2))
+
+while running:
+    screen.fill(WHITE)
+
+    # Get the keys pressed
+    keys = pygame.key.get_pressed()
+
+    # Movement for Maria
+    if keys[pygame.K_LEFT]:
+        maria_x -= speed
+    if keys[pygame.K_RIGHT]:
+        maria_x += speed
+    if keys[pygame.K_UP]:
+        maria_y -= speed
+    if keys[pygame.K_DOWN]:
+        maria_y += speed
+
+    # Drawing characters
+    screen.blit(maria_img, (maria_x, maria_y))
+    screen.blit(miguel_img, (miguel_x, miguel_y))
+
+    # Check for interaction with Miguel
+    if abs(maria_x - miguel_x) < 50 and abs(maria_y - miguel_y) < 50:
+        display_message("You found Miguel! Press 'E' to interact.")
+        if keys[pygame.K_e]:
+            interaction_happened = True
+
+    # Interaction result
+    if interaction_happened:
+        display_message("Miguel agrees to help! Lead him to the stream.")
+
+    # Event handling
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Update the display
+    pygame.display.flip()
+
+# Quit Pygame
+pygame.quit()
+sys.exit()
